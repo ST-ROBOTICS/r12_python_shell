@@ -4,16 +4,12 @@ import colorama
 import cmd
 import glob
 import os
+import arm
 import pkg_resources
 import sys
 
-import r12
-
-
 HELP_DIR_NAME = 'help'
 PYTHON_VERSION = '.'.join([str(x) for x in sys.version_info[:3]])
-R12_VERSION = pkg_resources.require('r12')[0].version
-
 
 class ShellStyle(object):
     ''' Styling for a command shell. '''
@@ -76,10 +72,7 @@ class ArmShell(cmd.Cmd, object):
         # output to and from the arm for additional processing.
         self.wrapper = wrapper
 
-        self.intro = '\n'.join([self.style.theme('R12 Shell'),
-                                'Version {}'.format(R12_VERSION),
-                                'Python Version {}'.format(sys.version),
-                                'First time? Type \'help\'.'])
+        self.intro = ('First time? Type \'help\'.')
         self.prompt = self.style.theme('> ')
 
         self.file = None
@@ -198,7 +191,7 @@ class ArmShell(cmd.Cmd, object):
                 port = self.arm.connect()
                 print(self.style.success('Success: ',
                                          'Connected to \'{}\'.'.format(port)))
-            except r12.ArmException as e:
+            except arm.ArmException as e:
                 print(self.style.error('Error: ', str(e)))
 
 
@@ -246,7 +239,7 @@ class ArmShell(cmd.Cmd, object):
 
     def do_version(self, arg):
         ''' Print version information. '''
-        print('R12 {}\nPython {}'.format(R12_VERSION, PYTHON_VERSION))
+        print('Python {}'.format(PYTHON_VERSION))
 
 
     def complete_run(self, text, line, b, e):
